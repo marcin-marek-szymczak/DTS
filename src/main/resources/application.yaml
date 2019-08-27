@@ -1,1 +1,8 @@
-
+logging:
+  level:
+    pl:
+      szymczak: debug
+dts:
+  file:
+    path: 'C:/Data/'
+    name: 'generated.json'
