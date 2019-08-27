@@ -22,7 +22,9 @@ dependencies {
     compileOnly (
             'org.projectlombok:lombok',
             'io.springfox:springfox-swagger2:2.9.2',
-            'io.springfox:springfox-swagger-ui:2.9.2'
+            'io.springfox:springfox-swagger-ui:2.9.2',
+            'com.google.code.gson:gson:2.8.5',
+            'org.apache.commons:commons-lang3:3.9'
     )
     implementation 'org.springframework.boot:spring-boot-starter-web'
     annotationProcessor 'org.projectlombok:lombok'

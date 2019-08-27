@@ -5,10 +5,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.Instant;
-
 @AllArgsConstructor
-@Getter @Setter @ToString
+@Getter
+@Setter
+@ToString
 public class Event {
     private String id;
     private EventState state;
