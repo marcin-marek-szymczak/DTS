@@ -2,7 +2,6 @@ package pl.szymczak.dts.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.Entity;
@@ -11,7 +10,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-@NoArgsConstructor @Getter @ToString
+@NoArgsConstructor
+@Getter
+@ToString
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

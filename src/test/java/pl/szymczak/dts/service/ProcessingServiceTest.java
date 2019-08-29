@@ -27,7 +27,7 @@ public class ProcessingServiceTest {
     }
 
     @Test
-    public void shouldMapSinglePair(){
+    public void shouldMapSinglePair() {
         //given
         final LogEntry event1 = new LogEntry("a", EventState.STARTED, null, null, 123);
         final LogEntry event2 = new LogEntry("a", EventState.FINISHED, null, null, 124);
@@ -43,7 +43,7 @@ public class ProcessingServiceTest {
     }
 
     @Test
-    public void shouldIgnoreIncorrectPairs(){
+    public void shouldIgnoreIncorrectPairs() {
         //given
         final LogEntry event1 = new LogEntry("a", EventState.STARTED, null, null, 123);
         final ArrayList<LogEntry> logEntries = new ArrayList<>();
@@ -57,7 +57,7 @@ public class ProcessingServiceTest {
     }
 
     @Test
-    public void shouldNotTriggerAlarmWhenEventTakes4ms(){
+    public void shouldNotTriggerAlarmWhenEventTakes4ms() {
         //given
         final LogEntry event1 = new LogEntry("a", EventState.STARTED, null, null, 120);
         final LogEntry event2 = new LogEntry("a", EventState.FINISHED, null, null, 124);
@@ -74,7 +74,7 @@ public class ProcessingServiceTest {
     }
 
     @Test
-    public void shouldTriggerAlarmWhenEventTakes5ms(){
+    public void shouldTriggerAlarmWhenEventTakes5ms() {
         //given
         final LogEntry event1 = new LogEntry("a", EventState.STARTED, null, null, 120);
         final LogEntry event2 = new LogEntry("a", EventState.FINISHED, null, null, 125);

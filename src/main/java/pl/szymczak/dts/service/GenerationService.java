@@ -6,9 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import pl.szymczak.dts.domain.Event;
-import pl.szymczak.dts.dto.EventState;
 import pl.szymczak.dts.domain.EventType;
+import pl.szymczak.dts.dto.EventState;
 import pl.szymczak.dts.dto.LogEntry;
 
 import java.io.FileWriter;
@@ -63,6 +62,4 @@ public class GenerationService {
             log.error("Error during saving to file", e);
         }
     }
-
-
 }
