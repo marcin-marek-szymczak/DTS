@@ -36,15 +36,6 @@ public class ProcessingService {
     public void processEvents() {
         List<LogEntry> logEntries = readLogEntriesFromFile();
         List<Event> events = mapToEvents(logEntries);
-//        int processedSoFar=0;
-//        int numberOfEvents=events.size();
-//        for (Event event: events) {
-//            eventRepository.save(event);
-//            if(processedSoFar%100 == 0) {
-//                log.debug("persisting progress is {}% ", (double)processedSoFar/numberOfEvents*100.0);
-//            }
-//            processedSoFar++;
-//        }
         eventRepository.saveAll(events);
     }
 
