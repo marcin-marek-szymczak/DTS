@@ -7,8 +7,9 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.szymczak.dts.domain.Event;
-import pl.szymczak.dts.domain.EventState;
+import pl.szymczak.dts.dto.EventState;
 import pl.szymczak.dts.domain.EventType;
+import pl.szymczak.dts.dto.LogEntry;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -30,15 +31,15 @@ public class GenerationService {
     private String fileName;
 
     public void generateData(int amountOfEventPairs) {
-        ArrayList<Event> events = new ArrayList<>();
+        ArrayList<LogEntry> logEntries = new ArrayList<>();
         for (int i = 0; i < amountOfEventPairs; i++) {
-            generateEventPair(events);
+            generateEventPair(logEntries);
         }
-        Collections.shuffle(events);
-        saveToFile(events);
+        Collections.shuffle(logEntries);
+        saveToFile(logEntries);
     }
 
-    void generateEventPair(ArrayList<Event> events) {
+    void generateEventPair(ArrayList<LogEntry> logEntries) {
         String eventId = RandomStringUtils.random(10, true, false);
         boolean isApplicationLog = (new Random()).nextBoolean();
         EventType eventType = isApplicationLog ? EventType.APPLICATION_LOG : null;
@@ -46,18 +47,18 @@ public class GenerationService {
         int minEventDuration = 1;
         int maxEventDuration = 10;
         int eventDuration = ThreadLocalRandom.current().nextInt(minEventDuration, maxEventDuration + 1);
-        long taskStartEpochSecond = Instant.now().getEpochSecond();
-        Event event1 = new Event(eventId, EventState.STARTED, eventType, hostName, taskStartEpochSecond);
-        Event event2 = new Event(eventId, EventState.FINISHED, eventType, hostName, taskStartEpochSecond + eventDuration);
+        int taskStartEpochSecond = (int) Instant.now().getEpochSecond();
+        LogEntry logEntry1 = new LogEntry(eventId, EventState.STARTED, eventType, hostName, taskStartEpochSecond);
+        LogEntry logEntry2 = new LogEntry(eventId, EventState.FINISHED, eventType, hostName, taskStartEpochSecond + eventDuration);
 
-        events.add(event1);
-        events.add(event2);
+        logEntries.add(logEntry1);
+        logEntries.add(logEntry2);
     }
 
-    private void saveToFile(List<Event> event1) {
+    private void saveToFile(List<LogEntry> logEntries) {
         try (Writer writer = new FileWriter(filePath + fileName)) {
             Gson gson = new GsonBuilder().create();
-            gson.toJson(event1, writer);
+            gson.toJson(logEntries, writer);
         } catch (IOException e) {
             log.error("Error during saving to file", e);
         }

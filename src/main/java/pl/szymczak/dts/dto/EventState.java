@@ -1,4 +1,4 @@
-package pl.szymczak.dts.domain;
+package pl.szymczak.dts.dto;
 
 public enum EventState {
     STARTED,FINISHED;
