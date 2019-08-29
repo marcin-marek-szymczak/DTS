@@ -10,7 +10,6 @@ import pl.szymczak.dts.domain.Event;
 import pl.szymczak.dts.domain.EventState;
 import pl.szymczak.dts.domain.EventType;
 
-import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -42,13 +41,13 @@ public class GenerationService {
     void generateEventPair(ArrayList<Event> events) {
         String eventId = RandomStringUtils.random(10, true, false);
         boolean isApplicationLog = (new Random()).nextBoolean();
-        EventType eventType = isApplicationLog ?EventType.APPLICATION_LOG :null;
-        String hostName = isApplicationLog ?RandomStringUtils.random(5, false, true) :null;
-        int minEventDuration=1;
-        int maxEventDuration=10;
+        EventType eventType = isApplicationLog ? EventType.APPLICATION_LOG : null;
+        String hostName = isApplicationLog ? RandomStringUtils.random(5, false, true) : null;
+        int minEventDuration = 1;
+        int maxEventDuration = 10;
         int eventDuration = ThreadLocalRandom.current().nextInt(minEventDuration, maxEventDuration + 1);
         long taskStartEpochSecond = Instant.now().getEpochSecond();
-        Event event1 = new Event(eventId, EventState.STARTED, eventType , hostName, taskStartEpochSecond);
+        Event event1 = new Event(eventId, EventState.STARTED, eventType, hostName, taskStartEpochSecond);
         Event event2 = new Event(eventId, EventState.FINISHED, eventType, hostName, taskStartEpochSecond + eventDuration);
 
         events.add(event1);
@@ -56,7 +55,7 @@ public class GenerationService {
     }
 
     private void saveToFile(List<Event> event1) {
-        try (Writer writer = new FileWriter(filePath+fileName)) {
+        try (Writer writer = new FileWriter(filePath + fileName)) {
             Gson gson = new GsonBuilder().create();
             gson.toJson(event1, writer);
         } catch (IOException e) {
