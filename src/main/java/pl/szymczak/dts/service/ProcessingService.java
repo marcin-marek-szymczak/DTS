@@ -8,7 +8,6 @@ import pl.szymczak.dts.domain.Event;
 import pl.szymczak.dts.dto.LogEntry;
 import pl.szymczak.dts.repository.EventRepository;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ public class ProcessingService {
         eventRepository.saveAll(events);
     }
 
-    private List<Event> mapToEvents(List<LogEntry> logEntries) {
+    List<Event> mapToEvents(List<LogEntry> logEntries) {
         List<Event> events = new ArrayList<>();
         Map<String, List<LogEntry>> logsGroupedById = logEntries.stream().collect(groupingBy(LogEntry::getId));
         final int numberOfLogGroups = logsGroupedById.keySet().size();
@@ -51,9 +50,9 @@ public class ProcessingService {
                 continue;
             }
             int eventDuration = Math.abs(currentLogEventPair.get(0).getTimestamp() - currentLogEventPair.get(1).getTimestamp());
-            events.add(new Event(logId, eventDuration,currentLogEventPair.get(0).getType(),currentLogEventPair.get(0).getHost(),eventDuration>4));
-            if(processedSoFar%10000 == 0) {
-                log.debug("mapping progress is {}% ", (double)processedSoFar/numberOfLogGroups*100.0);
+            events.add(new Event(logId, eventDuration, currentLogEventPair.get(0).getType(), currentLogEventPair.get(0).getHost(), eventDuration > 4));
+            if (processedSoFar % 10000 == 0) {
+                log.debug("mapping progress is {}% ", (double) processedSoFar / numberOfLogGroups * 100.0);
             }
             processedSoFar++;
         }
@@ -61,10 +60,10 @@ public class ProcessingService {
         return events;
     }
 
-    private List<LogEntry> readLogEntriesFromFile(){
+    private List<LogEntry> readLogEntriesFromFile() {
         log.debug("Reading log entries");
         Gson gson = new Gson();
-        try (FileReader fileReader = new FileReader(filePath + fileName)){
+        try (FileReader fileReader = new FileReader(filePath + fileName)) {
             return Arrays.asList(gson.fromJson(fileReader, LogEntry[].class));
         } catch (IOException e) {
             log.error("File does not exist", e);
