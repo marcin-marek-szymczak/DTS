@@ -2,7 +2,6 @@ package pl.szymczak.dts.api;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +15,7 @@ public class GeneratorApi {
     private GenerationService generationService;
 
     @PostMapping("/generate")
-    public void generateFile(@RequestParam Integer amountOfEventPairs){
+    public void generateFile(@RequestParam Integer amountOfEventPairs) {
         log.info("User wants to generate data for file");
         generationService.generateData(amountOfEventPairs);
     }

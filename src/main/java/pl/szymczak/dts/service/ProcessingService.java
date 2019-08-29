@@ -4,11 +4,14 @@ import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import pl.szymczak.dts.domain.Event;
 import pl.szymczak.dts.dto.LogEntry;
 import pl.szymczak.dts.repository.EventRepository;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -30,10 +33,26 @@ public class ProcessingService {
         this.eventRepository = eventRepository;
     }
 
-    public void processEvents() throws FileNotFoundException {
-        Gson gson = new Gson();
-        List<LogEntry> logEntries = Arrays.asList(gson.fromJson(new FileReader(filePath + fileName), LogEntry[].class));
+    public void processEvents() {
+        List<LogEntry> logEntries = readLogEntriesFromFile();
+        List<Event> events = mapToEvents(logEntries);
+//        int processedSoFar=0;
+//        int numberOfEvents=events.size();
+//        for (Event event: events) {
+//            eventRepository.save(event);
+//            if(processedSoFar%100 == 0) {
+//                log.debug("persisting progress is {}% ", (double)processedSoFar/numberOfEvents*100.0);
+//            }
+//            processedSoFar++;
+//        }
+        eventRepository.saveAll(events);
+    }
+
+    private List<Event> mapToEvents(List<LogEntry> logEntries) {
+        List<Event> events = new ArrayList<>();
         Map<String, List<LogEntry>> logsGroupedById = logEntries.stream().collect(groupingBy(LogEntry::getId));
+        final int numberOfLogGroups = logsGroupedById.keySet().size();
+        int processedSoFar = 0;
         for (String logId : logsGroupedById.keySet()) {
             List<LogEntry> currentLogEventPair = logsGroupedById.get(logId);
             if (currentLogEventPair.size() != 2) {
@@ -41,10 +60,24 @@ public class ProcessingService {
                 continue;
             }
             int eventDuration = Math.abs(currentLogEventPair.get(0).getTimestamp() - currentLogEventPair.get(1).getTimestamp());
-            log.debug("event duration is {}", eventDuration);
+            events.add(new Event(logId, eventDuration,currentLogEventPair.get(0).getType(),currentLogEventPair.get(0).getHost(),eventDuration>4));
+            if(processedSoFar%10000 == 0) {
+                log.debug("mapping progress is {}% ", (double)processedSoFar/numberOfLogGroups*100.0);
+            }
+            processedSoFar++;
         }
+        log.info("mapping has finished");
+        return events;
+    }
 
-
-
+    private List<LogEntry> readLogEntriesFromFile(){
+        log.debug("Reading log entries");
+        Gson gson = new Gson();
+        try (FileReader fileReader = new FileReader(filePath + fileName)){
+            return Arrays.asList(gson.fromJson(fileReader, LogEntry[].class));
+        } catch (IOException e) {
+            log.error("File does not exist", e);
+        }
+        return new ArrayList<>();
     }
 }
